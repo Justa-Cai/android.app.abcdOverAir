@@ -126,32 +126,73 @@ public class SimpleAdapterEx extends BaseAdapter implements Filterable {
         return createViewFromResource(position, convertView, parent, mResource);
     }
 
+    class ViewHold
+    {
+    	TextView tvInfo;
+    	CheckBox[] checkboxN;
+    }
+    
+    class ViewHoldData
+    {
+    	
+    	public ViewHoldData(int postion, String id) {
+    	
+    		mPosition = postion;
+    		mID = id;
+		}
+    	int mPosition;
+    	String mID;
+    }
+    
     private View createViewFromResource(int position, View convertView,
             ViewGroup parent, int resource) {
         View v;
         if (convertView == null) {
             v = mInflater.inflate(resource, parent, false);
-            CheckBox checkboxA = (CheckBox)v.findViewById(R.id.checkBoxA);
-            checkboxA.setTag("" + position);
-            checkboxA.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					int position = Integer.parseInt((String)buttonView.getTag());
-					final Map dataSet = mData.get(position);
-					final String[] from = mFrom;
-					if (dataSet != null) 
-					{
-						mUtils.Logx("onCheckedChanged:" + position + " :" + isChecked);
-						dataSet.put(from[1], isChecked);
+            ViewHold viewHold = new ViewHold();
+            
+            final Map dataSet = mData.get(position);
+            final String[] from = mFrom;
+            final int[] to = mTo;
+            final int count = to.length;
+            viewHold.checkboxN = new CheckBox[count];
+            
+			for (int i = 0; i < count; i++) {
+				final View v1 = v.findViewById(to[i]);
+				if (v1 != null) {
+					mUtils.Logx("i:" + i);
+					if (v1 instanceof Checkable) {
+						CheckBox checkBoxN = viewHold.checkboxN[i-1] = (CheckBox)v1;
+						ViewHoldData data = new ViewHoldData(position, from[i]);
+						checkBoxN.setTag(data);
+						checkBoxN.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+							@Override
+							public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+								ViewHoldData data = (ViewHoldData)buttonView.getTag();
+								final Map dataSet = mData.get(data.mPosition);
+								if (dataSet != null) 
+								{
+									mUtils.Logx("onCheckedChanged:" + data.mPosition + " :" + isChecked);
+									dataSet.put(data.mID, isChecked);
+								}
+							}
+						});
+						
 					}
 				}
-			});
-            v.setTag(checkboxA);
+			}
+            v.setTag(viewHold);
         } else {
             v = convertView;
-            CheckBox checkBoxA = (CheckBox)v.getTag();
-            checkBoxA.setTag("" + position);
+            ViewHold viewHold = (ViewHold)v.getTag();
+            for (int i=0; i<viewHold.checkboxN.length;  i++)
+            {
+            	CheckBox checkBox = viewHold.checkboxN[i];
+            	if (checkBox == null)
+            		break;
+            	ViewHoldData data = (ViewHoldData) checkBox.getTag();
+            	data.mPosition = position;
+            }
         }
 
         bindView(position, v);
