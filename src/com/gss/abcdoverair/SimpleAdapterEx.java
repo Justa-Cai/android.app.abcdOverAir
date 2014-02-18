@@ -160,7 +160,7 @@ public class SimpleAdapterEx extends BaseAdapter implements Filterable {
 			for (int i = 0; i < count; i++) {
 				final View v1 = v.findViewById(to[i]);
 				if (v1 != null) {
-					mUtils.Logx("i:" + i);
+					//mUtils.Logx("i:" + i);
 					if (v1 instanceof Checkable) {
 						CheckBox checkBoxN = viewHold.checkboxN[i-1] = (CheckBox)v1;
 						ViewHoldData data = new ViewHoldData(position, from[i]);
@@ -172,7 +172,7 @@ public class SimpleAdapterEx extends BaseAdapter implements Filterable {
 								final Map dataSet = mData.get(data.mPosition);
 								if (dataSet != null) 
 								{
-									mUtils.Logx("onCheckedChanged:" + data.mPosition + " :" + isChecked);
+									//mUtils.Logx("onCheckedChanged:" + data.mPosition + " :" + isChecked);
 									dataSet.put(data.mID, isChecked);
 								}
 							}

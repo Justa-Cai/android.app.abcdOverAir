@@ -8,5 +8,6 @@
     <string name="btnClient">找答案</string>
     <string name="btnShare">一键分享</string>
     <string name="tvInfo">状态...</string>
+    <string name="exitShare">退出分享</string>
 
 </resources>

@@ -8,6 +8,7 @@ import java.util.Map;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.MutableContextWrapper;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -67,26 +68,48 @@ public class ServerListActivity extends ListActivity implements
 
 	}
 
+	void dbg()
+	{
+		String result = "";
+		for (int i = 0; i < listItems.size(); i++) {
+			Map<String, Object> listItem = listItems.get(i);
+			String resultList;
+			resultList = String.format("%03d   ", Integer.parseInt((String) listItem.get(ListContentKey[0])));
+			for (int j=1; j<ListContentKey.length; j++)
+			{
+				if ((Boolean)listItem.get(ListContentKey[j])==true)
+					resultList += ListContentKey[j];
+			}
+			resultList += "\n";
+			result += resultList;
+		}
+				new AlertDialog.Builder(this).setTitle("Answer")
+						.setMessage(result).create().show();
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btnShare:
-			String result = "";
+			String content = "";
 			for (int i = 0; i < listItems.size(); i++) {
 				Map<String, Object> listItem = listItems.get(i);
-				String resultList;
-				resultList = String.format("%03d   ", Integer.parseInt((String) listItem.get(ListContentKey[0])));
-				for (int j=1; j<ListContentKey.length; j++)
-				{
-					if ((Boolean)listItem.get(ListContentKey[j])==true)
+				String resultList = "";
+				for (int j = 1; j < ListContentKey.length; j++) {
+					if ((Boolean) listItem.get(ListContentKey[j]) == true)
 						resultList += ListContentKey[j];
 				}
-				resultList += "\n";
-				result += resultList;
+				if (resultList.length() == 0)
+					resultList = "!";
+				else if (resultList.length() != 1)
+					resultList = "@" + resultList + "@";
+				content += resultList;
 			}
-					new AlertDialog.Builder(this).setTitle("Answer")
-							.setMessage(result).create().show();
+			
+			Intent intent=  new Intent(this,  BluetoothActivity.class);
+			intent.putExtra("content", content);
+			startActivity(intent);
 			break;
 		}
 

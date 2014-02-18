@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 		mUtils.Init(this);
 		
-		//startActivity(new Intent(this, ListViewLoader.class));
+		//startActivity(new Intent(this,  BluetoothActivity.class));
 	}
 
 	@Override
